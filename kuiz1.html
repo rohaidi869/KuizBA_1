@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>الاختبار النحوي التفاعلي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet">
+  <style>
+    * {
+      font-family: 'Cairo', sans-serif;
+      box-sizing: border-box;
+      direction: rtl;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      background: #f4f4f4;
+      color: #333;
+    }
+    .container {
+      max-width: 700px;
+      margin: auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      margin-top: 50px;
+    }
+    h1, h2 {
+      text-align: center;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin: 20px 0;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      display: inline-block;
+      padding: 10px 20px;
+      margin: 10px 5px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .option-btn {
+      background: #007BFF;
+      color: white;
+    }
+    .option-btn.correct {
+      background: green;
+    }
+    .option-btn.wrong {
+      background: red;
+    }
+    #options button:disabled {
+      opacity: 0.6;
+    }
+    #feedback {
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 5px;
+      background: #eef;
+    }
+    #score {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    #certificate {
+      display: none;
+      text-align: center;
+    }
+    #studentDisplay, #grade {
+      font-size: 20px;
+      color: #007BFF;
+    }
+    @media (max-width: 600px) {
+      .container {
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container" id="startPage">
+  <h1>مرحبًا بك في الاختبار النحوي!</h1>
+  <input type="text" id="studentName" placeholder="أدخل اسمك هنا">
+  <button onclick="startQuiz()">ابدأ الاختبار</button>
+</div>
+
+<div class="container" id="quizPage" style="display:none;">
+  <h2>الاختبار النحوي التفاعلي - المستوى الأول</h2>
+  <p id="question"></p>
+  <div id="options"></div>
+  <div id="feedback"></div>
+  <button onclick="prevQuestion()">السابق</button>
+  <button onclick="nextQuestion()">التالي</button>
+  <p id="score">الدرجة: 0 / 5</p>
+</div>
+
+<div class="container" id="certificate" style="display:none;">
+  <h2>شهادة اجتياز الاختبار</h2>
+  <p>تهانينا، لقد اجتزت الاختبار!</p>
+  <p><strong>الاسم:</strong> <span id="studentDisplay"></span></p>
+  <p><strong>الدرجة:</strong> <span id="grade"></span></p>
+  <button onclick="window.print()">طباعة الشهادة</button>
+</div>
+
+<script>
+const quizData = [
+  {
+    question: "ما نوع الإعراب للفظ \"زيد\" في الجملة \"رأيتُ زيدًا يلعب\"؟",
+    options: ["فاعل", "مفعول به منصوب وعلامة نصبه الفتحة", "نعت", "ظرف"],
+    answer: "مفعول به منصوب وعلامة نصبه الفتحة",
+    explanation: "في هذه الجملة \"زيدًا\" مفعول به منصوب وعلامة نصبه الفتحة الظاهرة."
+  },
+  {
+    question: "ما هو الخبر في الجملة \"إنَّ زيدًا قائمٌ\"؟",
+    options: ["إن", "زيدًا", "قائمٌ", "لا شيء مما سبق"],
+    answer: "قائمٌ",
+    explanation: "خبر \"إنَّ\" في هذه الجملة هو \"قائمٌ\" وهو اسمها يكون مرفوعًا دائمًا."
+  },
+  {
+    question: "ما إعراب \"على\" في الجملة \"كتب الطالب على السبورة\"؟",
+    options: ["حرف جر", "فعل", "اسم", "ضمير"],
+    answer: "حرف جر",
+    explanation: "\"على\" حرف جر يستخدم للإشارة إلى المكان، وتتبع بعدها المجرور."
+  },
+  {
+    question: "ما نوع الجملة في \"ذهب محمد إلى المدرسة\"؟",
+    options: ["جملة اسمية", "جملة فعلية", "جملة شرطية", "جملة استفهامية"],
+    answer: "جملة فعلية",
+    explanation: "هذه جملة فعلية لأنها بدأت بفعل \"ذهب\"."
+  },
+  {
+    question: "ما إعراب \"المعلم\" في الجملة \"المعلم كريمٌ\"؟",
+    options: ["فاعل مرفوع وعلامة رفعه الضمة", "مفعول به", "نعت", "خـبر"],
+    answer: "فاعل مرفوع وعلامة رفعه الضمة",
+    explanation: "\"المعلم\" في هذه الجملة اسم مرفوع لأنه فاعل ضمير مستتر تقديره \"هو\"."
+  }
+];
+
+let currentQuestion = 0;
+let score = 0;
+let answered = [];
+let studentName = "";
+
+function startQuiz() {
+  const input = document.getElementById("studentName");
+  if (!input.value.trim()) {
+    alert("الرجاء إدخال اسمك قبل بدء الاختبار.");
+    return;
+  }
+  studentName = input.value.trim();
+  document.getElementById("startPage").style.display = "none";
+  document.getElementById("quizPage").style.display = "block";
+  loadQuestion();
+}
+
+function loadQuestion() {
+  const q = quizData[currentQuestion];
+  document.getElementById("question").textContent = q.question;
+  const optionsContainer = document.getElementById("options");
+  optionsContainer.innerHTML = "";
+  q.options.forEach(opt => {
+    const btn = document.createElement("button");
+    btn.textContent = opt;
+    btn.className = "option-btn";
+    btn.onclick = () => checkAnswer(btn, opt, q.answer, q.explanation);
+    if (answered[currentQuestion]) {
+      btn.disabled = true;
+      if (opt === q.answer) {
+        btn.classList.add("correct");
+      } else if (btn.textContent === Array.from(optionsContainer.children).find(b => b.style.backgroundColor === "red")?.textContent) {
+        btn.classList.add("wrong");
+      }
+    }
+    optionsContainer.appendChild(btn);
+  });
+  document.getElementById("score").textContent = `الدرجة: ${score} / ${quizData.length}`;
+}
+
+function checkAnswer(button, selected, correct, explanation) {
+  const options = document.getElementById("options").children;
+  if (answered[currentQuestion]) return;
+
+  let isCorrect = false;
+  for (let i = 0; i < options.length; i++) {
+    options[i].disabled = true;
+    if (options[i].textContent === correct) {
+      options[i].classList.add("correct");
+    }
+    if (options[i].textContent === selected) {
+      if (selected === correct) {
+        score++;
+        isCorrect = true;
+        button.classList.add("correct");
+      } else {
+        button.classList.add("wrong");
+      }
+    }
+  }
+
+  document.getElementById("feedback").innerHTML = `<strong>${isCorrect ? "صحيح!" : "خطأ!"}</strong><br>${explanation}`;
+  answered[currentQuestion] = true;
+  document.getElementById("score").textContent = `الدرجة: ${score} / ${quizData.length}`;
+
+  if (currentQuestion === quizData.length - 1) {
+    setTimeout(showScore, 1000);
+  }
+}
+
+function nextQuestion() {
+  if (currentQuestion < quizData.length - 1) {
+    currentQuestion++;
+    document.getElementById("feedback").textContent = "";
+    loadQuestion();
+  }
+}
+
+function prevQuestion() {
+  if (currentQuestion > 0) {
+    currentQuestion--;
+    document.getElementById("feedback").textContent = "";
+    loadQuestion();
+  }
+}
+
+function getGrade(score) {
+  if (score >= 4) return "ممتاز";
+  if (score >= 3) return "جيد جدًا";
+  if (score >= 2) return "جيد";
+  return "تحتاج للمراجعة";
+}
+
+function showScore() {
+  document.getElementById("quizPage").style.display = "none";
+  document.getElementById("certificate").style.display = "block";
+  document.getElementById("studentDisplay").textContent = studentName;
+  document.getElementById("grade").textContent = getGrade(score);
+}
+</script>
+
+</body>
+</html>
