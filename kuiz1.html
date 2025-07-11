@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>الاختبار النحوي التفاعلي</title>
+  <title>الاختبار التفاعلي في تقنية المعلومات</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet">
   <style>
     * {
@@ -53,6 +53,8 @@
     .option-btn {
       background: #007BFF;
       color: white;
+      width: 100%;
+      margin-bottom: 10px;
     }
     .option-btn.correct {
       background: green;
@@ -91,19 +93,28 @@
 <body>
 
 <div class="container" id="startPage">
-  <h1>مرحبًا بك في الاختبار النحوي!</h1>
+  <h1>مرحبا بك في اختبار تكنولوجيا المعلومات</h1>
+  <p style="text-align: center; font-size: 18px;">
+    <strong>المادة:</strong> اللغة العربية لوسائل الإعلام الرقمية<br>
+    <strong>الموضوع:</strong> تكنولوجيا المعلومات
+  </p>
+  <p style="text-align: justify;">
+    هذا الاختبار التفاعلي مصمم لتقييم معرفتك الأساسية بمفاهيم وتطورات تكنولوجيا المعلومات، 
+    وهو جزء من مادة "اللغة العربية لوسائل الإعلام الرقمية". يتضمن الاختبار عشرة أسئلة متعددة الخيارات 
+    مع توضيح لكل إجابة. يرجى إدخال اسمك قبل البدء.
+  </p>
   <input type="text" id="studentName" placeholder="أدخل اسمك هنا">
   <button onclick="startQuiz()">ابدأ الاختبار</button>
 </div>
-
+  
 <div class="container" id="quizPage" style="display:none;">
-  <h2>الاختبار النحوي التفاعلي - المستوى الأول</h2>
+  <h2>الاختبار التفاعلي في تقنية المعلومات - المستوى الأول</h2>
   <p id="question"></p>
   <div id="options"></div>
   <div id="feedback"></div>
   <button onclick="prevQuestion()">السابق</button>
   <button onclick="nextQuestion()">التالي</button>
-  <p id="score">الدرجة: 0 / 5</p>
+  <p id="score">الدرجة: 0 / 10</p>
 </div>
 
 <div class="container" id="certificate" style="display:none;">
@@ -117,34 +128,64 @@
 <script>
 const quizData = [
   {
-    question: "ما نوع الإعراب للفظ \"زيد\" في الجملة \"رأيتُ زيدًا يلعب\"؟",
-    options: ["فاعل", "مفعول به منصوب وعلامة نصبه الفتحة", "نعت", "ظرف"],
-    answer: "مفعول به منصوب وعلامة نصبه الفتحة",
-    explanation: "في هذه الجملة \"زيدًا\" مفعول به منصوب وعلامة نصبه الفتحة الظاهرة."
+    question: "ما هو أول حاسوب إلكتروني تم تطويره؟",
+    options: ["ENIAC", "UNIVAC", "IBM PC", "FORTRAN"],
+    answer: "ENIAC",
+    explanation: "تم تطوير الحاسوب الإلكتروني ENIAC عام 1946 وهو أول حاسوب رقمي عام."
   },
   {
-    question: "ما هو الخبر في الجملة \"إنَّ زيدًا قائمٌ\"؟",
-    options: ["إن", "زيدًا", "قائمٌ", "لا شيء مما سبق"],
-    answer: "قائمٌ",
-    explanation: "خبر \"إنَّ\" في هذه الجملة هو \"قائمٌ\" وهو اسمها يكون مرفوعًا دائمًا."
+    question: "ما هو معنى WWW؟",
+    options: ["World Wide Web", "Web World Wide", "Wide World Web", "World Web Wide"],
+    answer: "World Wide Web",
+    explanation: "WWW تعني World Wide Web وهي شبكة المعلومات العالمية التي طورها تيم بيرنرز لي عام 1991."
   },
   {
-    question: "ما إعراب \"على\" في الجملة \"كتب الطالب على السبورة\"؟",
-    options: ["حرف جر", "فعل", "اسم", "ضمير"],
-    answer: "حرف جر",
-    explanation: "\"على\" حرف جر يستخدم للإشارة إلى المكان، وتتبع بعدها المجرور."
+    question: "من الذي طوّر أول معالج دقيق Intel 4004؟",
+    options: ["Intel", "Apple", "Microsoft", "IBM"],
+    answer: "Intel",
+    explanation: "في عام 1971، طوّرت شركة Intel أول معالج دقيق وهو Intel 4004."
   },
   {
-    question: "ما نوع الجملة في \"ذهب محمد إلى المدرسة\"؟",
-    options: ["جملة اسمية", "جملة فعلية", "جملة شرطية", "جملة استفهامية"],
-    answer: "جملة فعلية",
-    explanation: "هذه جملة فعلية لأنها بدأت بفعل \"ذهب\"."
+    question: "ما هو نظام التشغيل المعروف لشركة IBM في ستينيات القرن العشرين؟",
+    options: ["OS/360", "Windows", "UNIX", "DOS"],
+    answer: "OS/360",
+    explanation: "أطلقت IBM في عام 1964 نظام التشغيل OS/360 وهو من الأنظمة المهمة في تاريخ الحواسيب."
   },
   {
-    question: "ما إعراب \"المعلم\" في الجملة \"المعلم كريمٌ\"؟",
-    options: ["فاعل مرفوع وعلامة رفعه الضمة", "مفعول به", "نعت", "خـبر"],
-    answer: "فاعل مرفوع وعلامة رفعه الضمة",
-    explanation: "\"المعلم\" في هذه الجملة اسم مرفوع لأنه فاعل ضمير مستتر تقديره \"هو\"."
+    question: "ما هو مفهوم \"الحوسبة السحابية\"؟",
+    options: ["تخزين البيانات على الإنترنت", "استخدام أجهزة كمبيوتر محلية فقط", "إرسال البريد الإلكتروني فقط", "تشغيل الألعاب عبر الإنترنت"],
+    answer: "تخزين البيانات على الإنترنت",
+    explanation: "الحوسبة السحابية هي تخزين البيانات والتطبيقات على خوادم بعيدة متصلة بالإنترنت."
+  },
+  {
+    question: "متى ظهر أول هاتف ذكي iPhone؟",
+    options: ["2007", "2000", "2010", "1995"],
+    answer: "2007",
+    explanation: "أُصدر أول هاتف iPhone من شركة Apple في عام 2007، مما غير مفهوم الهواتف الذكية."
+  },
+  {
+    question: "ما هو دور HTML في الويب؟",
+    options: ["تصميم صفحات الويب", "برمجة التطبيقات", "إدارة قواعد البيانات", "تصحيح الأخطاء"],
+    answer: "تصميم صفحات الويب",
+    explanation: "HTML هو لغة ترميز تُستخدم لتصميم وتنظيم محتوى صفحات الويب."
+  },
+  {
+    question: "ما هو معنى IoT؟",
+    options: ["إنترنت الأشياء", "إنترنت الأجهزة", "شبكة الحواسيب", "الاتصال اللاسلكي"],
+    answer: "إنترنت الأشياء",
+    explanation: "IoT تعني إنترنت الأشياء، أي الربط بين الأجهزة المختلفة بشبكة الإنترنت."
+  },
+  {
+    question: "ما هو نظام التشغيل المستخدم في أجهزة أندرويد؟",
+    options: ["Android", "iOS", "Linux", "Windows"],
+    answer: "Android",
+    explanation: "نظام Android هو نظام تشغيل مبني على نواة Linux ويستخدم في معظم أجهزة الهواتف الذكية."
+  },
+  {
+    question: "ما هو أحد أهم تأثيرات التقنية على الإعلام الرقمي؟",
+    options: ["تسريع الوصول للمعلومات", "زيادة استخدام الصحف الورقية", "إبطاء نقل الأخبار", "عدم التواصل الاجتماعي"],
+    answer: "تسريع الوصول للمعلومات",
+    explanation: "التطور التكنولوجي ساهم بشكل كبير في تسريع الوصول إلى المعلومات والإخبار في الوقت الفعلي."
   }
 ];
 
@@ -235,9 +276,9 @@ function prevQuestion() {
 }
 
 function getGrade(score) {
-  if (score >= 4) return "ممتاز";
-  if (score >= 3) return "جيد جدًا";
-  if (score >= 2) return "جيد";
+  if (score >= 9) return "ممتاز";
+  if (score >= 7) return "جيد جدًا";
+  if (score >= 5) return "جيد";
   return "تحتاج للمراجعة";
 }
 
