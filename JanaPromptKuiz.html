@@ -1,20 +1,70 @@
+def penjana_prompt_kuiz_interaktif():
+    print("🚀 PENJANA PROMPT KUIZ HTML INTERAKTIF 🚀")
+    print("Sila isi maklumat berikut untuk menjana kuiz interaktif:\n")
+    
+    # Input pengguna
+    topik = input("1. Topik kuiz (cth: Teknologi Maklumat, Sejarah Islam): ").strip()
+    jumlah_soalan = input("2. Bilangan soalan [default: 10]: ").strip() or "10"
+    bahasa = input("3. Bahasa antaramuka (AR/BM/BI) [AR]: ").strip().upper() or "AR"
+    pelajaran = input("4. Nama pelajaran/subjek [default: sama seperti topik]: ").strip() or topik
+    
+    # Peta kod bahasa
+    bahasa_map = {
+        "AR": "Arab",
+        "BM": "Bahasa Melayu",
+        "BI": "Bahasa Inggeris"
+    }
+    
+    # Menjana prompt akhir
+    prompt = f"""
+Anda adalah seorang pakar dalam mencipta kuiz interaktif berdasarkan topik bagi pelajaran yang diberikan. Tugasan anda adalah untuk menghasilkan kod HTML lengkap (termasuk CSS dalam tag <style> dan JavaScript dalam tag <script>) untuk kuiz interaktif. 
 
-### Cara Menggunakan:
-1. Jalankan program
-2. Isi maklumat:
-   - **Topik kuiz** (wajib): Contoh: "Sistem Suria"
-   - **Bilangan soalan**: Default 10
-   - **Bahasa antaramuka**: AR (Arab), BM (Melayu), BI (Inggeris)
-   - **Nama pelajaran**: Jika kosong, gunakan topik kuiz
+**Ciri-ciri wajib:**
+1. **Struktur HTML:**
+   - `<!DOCTYPE html>`, `<html lang="{bahasa.lower()}">`, struktur standard
+   - Sertakan meta tag (charset, viewport), pautan font Google 'Cairo'
+   - CSS dalam <style>, JavaScript dalam <script>
 
-3. Program akan menghasilkan prompt teknikal lengkap
+2. **Antaramuka Pengguna:**
+   - Halaman Mula (`startPage`):
+     * Tajuk: "مرحبا بك في اختبار المادة" (Bahasa Arab) atau "Selamat Datang ke Kuiz" (BM/BI)
+     * Medan input nama pelajar
+     * Butang "Mula Kuiz" yang panggil `startQuiz()`
+   - Halaman Kuiz (`quizPage`):
+     * Paparan soalan (`#question`) dan pilihan jawapan (butang)
+     * Maklum balas jawapan (`#feedback`) dengan penjelasan
+     * Butang navigasi (Sebelumnya/Seterusnya)
+     * Paparan skor semasa (`#score`)
+   - Halaman Sijil (`certificate`):
+     * Paparan nama pelajar dan gred
+     * Butang cetak sijil
 
-### Contoh Output:
-```markdown
-Anda adalah seorang pakar dalam mencipta kuiz interaktif berdasarkan topik bagi pelajaran yang diberikan...
+3. **Fungsi JavaScript:**
+   - Data kuiz: `quizData = [...]` ({jumlah_soalan} soalan)
+   - Pemboleh ubah: `currentQuestion`, `score`, `answered`, `studentName`
+   - Fungsi: `startQuiz()`, `loadQuestion()`, `checkAnswer()`, `nextQuestion()`, `prevQuestion()`, `getGrade()`, `showScore()`
+
+4. **Gaya CSS:**
+   - Reka bentuk responsif dengan font 'Cairo'
+   - Warna tema: Biru (#3498db) dan Hijau (#2ecc71)
+   - Transisi butang dan bayangan elemen
+
 **Spesifikasi Kandungan:**
-- Topik kuiz: Sistem Suria
-- Pelajaran: Astronomi Asas
-- Bahasa: Arab
-- Jumlah soalan: 10
-...
+- Topik kuiz: {topik}
+- Pelajaran: {pelajaran}
+- Bahasa: {bahasa_map[bahasa]}
+- Jumlah soalan: {jumlah_soalan}
+- Format soalan: Pilihan berganda (4 pilihan/jawapan)
+- Semua teks UI dalam {bahasa_map[bahasa]} (kecuali jika bahasa Arab)
+
+**Contoh Struktur quizData:**
+```javascript
+const quizData = [
+  {{
+    question: "Soalan contoh dalam {bahasa_map[bahasa]}?",
+    options: ["Pilihan 1", "Pilihan 2", "Pilihan 3", "Pilihan 4"],
+    answer: "Pilihan 3",
+    explanation: "Penjelasan jawapan..."
+  }},
+  // ...{jumlah_soalan - 1} soalan lain
+];
