@@ -1,0 +1,20 @@
+
+### Cara Menggunakan:
+1. Jalankan program
+2. Isi maklumat:
+   - **Topik kuiz** (wajib): Contoh: "Sistem Suria"
+   - **Bilangan soalan**: Default 10
+   - **Bahasa antaramuka**: AR (Arab), BM (Melayu), BI (Inggeris)
+   - **Nama pelajaran**: Jika kosong, gunakan topik kuiz
+
+3. Program akan menghasilkan prompt teknikal lengkap
+
+### Contoh Output:
+```markdown
+Anda adalah seorang pakar dalam mencipta kuiz interaktif berdasarkan topik bagi pelajaran yang diberikan...
+**Spesifikasi Kandungan:**
+- Topik kuiz: Sistem Suria
+- Pelajaran: Astronomi Asas
+- Bahasa: Arab
+- Jumlah soalan: 10
+...
