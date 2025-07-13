@@ -1,293 +1,564 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>الاختبار التفاعلي في المادة العربية لغرض الإغلام الرقمي</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet">
-  <style>
-    * {
-      font-family: 'Cairo', sans-serif;
-      box-sizing: border-box;
-      direction: rtl;
-    }
-    body {
-      margin: 0;
-      padding: 0;
-      background: #f4f4f4;
-      color: #333;
-    }
-    .container {
-      max-width: 700px;
-      margin: auto;
-      padding: 20px;
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      margin-top: 50px;
-    }
-    h1, h2 {
-      text-align: center;
-    }
-    input[type="text"] {
-      width: 100%;
-      padding: 10px;
-      margin: 20px 0;
-      font-size: 16px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-    button {
-      display: inline-block;
-      padding: 10px 20px;
-      margin: 10px 5px;
-      font-size: 16px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-    button:hover {
-      background: #0056b3;
-    }
-    .option-btn {
-      background: #007BFF;
-      color: white;
-      width: 100%;
-      margin-bottom: 10px;
-    }
-    .option-btn.correct {
-      background: green;
-    }
-    .option-btn.wrong {
-      background: red;
-    }
-    #options button:disabled {
-      opacity: 0.6;
-    }
-    #feedback {
-      margin-top: 15px;
-      padding: 10px;
-      border-radius: 5px;
-      background: #eef;
-    }
-    #score {
-      margin-top: 10px;
-      font-weight: bold;
-    }
-    #certificate {
-      display: none;
-      text-align: center;
-    }
-    #studentDisplay, #grade {
-      font-size: 20px;
-      color: #007BFF;
-    }
-    @media (max-width: 600px) {
-      .container {
-        padding: 10px;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>كويز الدراسات اللغوية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .page {
+            display: none;
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        h1, h2, h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .start-page input {
+            width: 100%;
+            padding: 12px;
+            margin: 20px 0;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            margin: 10px 5px;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-start {
+            background-color: #27ae60;
+            width: 100%;
+        }
+        
+        .btn-start:hover {
+            background-color: #219653;
+        }
+        
+        .quiz-container {
+            margin-top: 20px;
+        }
+        
+        .question {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .option {
+            background-color: #f1f1f1;
+            padding: 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .option:hover {
+            background-color: #e1e1e1;
+        }
+        
+        .option.selected {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .option.correct {
+            background-color: #27ae60;
+            color: white;
+        }
+        
+        .option.incorrect {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .explanation {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .progress-container {
+            width: 100%;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: #3498db;
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        .certificate {
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .certificate h2 {
+            color: #27ae60;
+            margin-bottom: 30px;
+        }
+        
+        .score {
+            font-size: 24px;
+            margin: 20px 0;
+        }
+        
+        .grade {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 20px 0;
+        }
+        
+        .whatsapp-btn {
+            background-color: #25D366;
+            margin-top: 20px;
+        }
+        
+        .whatsapp-btn:hover {
+            background-color: #128C7E;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .page {
+                padding: 15px;
+            }
+            
+            .question {
+                font-size: 18px;
+            }
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <!-- Start Page -->
+        <div class="page start-page active">
+            <h1>اختبار الدراسات اللغوية</h1>
+            <h2>الدرس الأول: ماهية الدراسات اللغوية</h2>
+            <p>الرجاء إدخال اسمك للبدء في الاختبار:</p>
+            <input type="text" id="student-name" placeholder="اسم الطالب">
+            <button class="btn btn-start" onclick="startQuiz()">بدء الاختبار</button>
+        </div>
+        
+        <!-- Quiz Page -->
+        <div class="page quiz-page">
+            <h2>اختبار الدراسات اللغوية</h2>
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <div class="quiz-container">
+                <div class="question" id="question"></div>
+                <div class="options" id="options"></div>
+                <div class="explanation" id="explanation"></div>
+            </div>
+            <div class="navigation">
+                <button class="btn" id="prev-btn" onclick="prevQuestion()">السابق</button>
+                <button class="btn" id="next-btn" onclick="nextQuestion()">التالي</button>
+            </div>
+        </div>
+        
+        <!-- Certificate Page -->
+        <div class="page certificate-page">
+            <div class="certificate">
+                <h2>شهادة إتمام الاختبار</h2>
+                <h3 id="certificate-name"></h3>
+                <div class="score" id="score"></div>
+                <div class="grade" id="grade"></div>
+                <p>تهانينا على إتمامك الاختبار!</p>
+                <button class="btn whatsapp-btn" onclick="sendWhatsApp()">إرسال النتيجة عبر واتساب</button>
+                <button class="btn" onclick="restartQuiz()">إعادة الاختبار</button>
+            </div>
+        </div>
+    </div>
 
-<div class="container" id="startPage">
-  <h1>مرحبا بك في اختبار المادة اللغة العربية لغرض الإعلام الرقمية/h1>
-  <p style="text-align: center; font-size: 18px;">
-    <strong>الموضوع:</strong> تكنولوجيا المعلومات
-  </p>
-  <p style="text-align: justify;">
-    هذا الاختبار التفاعلي مصمم لتقييم معرفتك الأساسية بمفاهيم وتطورات تكنولوجيا المعلومات، 
-    وهو جزء من مادة "اللغة العربية لوسائل الإعلام الرقمية". يتضمن الاختبار عشرة أسئلة متعددة الخيارات 
-    مع توضيح لكل إجابة. يرجى إدخال اسمك قبل البدء.
-  </p>
-  <input type="text" id="studentName" placeholder="أدخل اسمك هنا">
-  <button onclick="startQuiz()">ابدأ الاختبار</button>
-</div>
-  
-<div class="container" id="quizPage" style="display:none;">
-  <h2>الاختبار التفاعلي في تقنية المعلومات - المستوى الأول</h2>
-  <p id="question"></p>
-  <div id="options"></div>
-  <div id="feedback"></div>
-  <button onclick="prevQuestion()">السابق</button>
-  <button onclick="nextQuestion()">التالي</button>
-  <p id="score">الدرجة: 0 / 10</p>
-</div>
+    <script>
+        // Quiz Data in Arabic
+        const quizData = [
+            {
+                question: "ما هي الدراسات اللغوية؟",
+                options: [
+                    "دراسة التاريخ فقط",
+                    "البحث العلمي المنظم في اللغة بمستوياتها المختلفة",
+                    "تحليل النصوص الأدبية فقط",
+                    "دراسة اللهجات المحلية فقط"
+                ],
+                answer: "البحث العلمي المنظم في اللغة بمستوياتها المختلفة",
+                explanation: "الدراسات اللغوية هي البحث العلمي المنظم في اللغة بمستوياتها المختلفة، صوتية وصرفية ونحوية ودلالية، وما يتصل بها من ظواهر لغوية واجتماعية ونفسية."
+            },
+            {
+                question: "متى بدأت الدراسات اللغوية في العالم العربي؟",
+                options: [
+                    "في القرن العشرين",
+                    "في القرن الأول الهجري",
+                    "في العصر الجاهلي",
+                    "في العصر الأموي فقط"
+                ],
+                answer: "في القرن الأول الهجري",
+                explanation: "بدأت الدراسات اللغوية في العالم العربي والإسلامي منذ القرن الأول الهجري، وكان الدافع الأساسي لها هو الحفاظ على القرآن الكريم وفهمه."
+            },
+            {
+                question: "من من العلماء الآتية أسماؤهم أسهم في الدراسات اللغوية؟",
+                options: [
+                    "الخليل بن أحمد الفراهيدي",
+                    "ابن سينا",
+                    "الفارابي",
+                    "الكندي"
+                ],
+                answer: "الخليل بن أحمد الفراهيدي",
+                explanation: "من أبرز العلماء الذين أسهموا في تطوير الدراسات اللغوية في تلك الفترة الخليل بن أحمد الفراهيدي (100-170هـ) وسيبويه (140-180هـ) وابن جني (322-392هـ)."
+            },
+            {
+                question: "ما أحد أغراض الدراسات اللغوية للقرآن الكريم؟",
+                options: [
+                    "إظهار الإعجاز اللغوي في القرآن الكريم",
+                    "تغيير لغة القرآن",
+                    "تقليل أهمية اللغة العربية",
+                    "إثبات أخطاء لغوية في القرآن"
+                ],
+                answer: "إظهار الإعجاز اللغوي في القرآن الكريم",
+                explanation: "من أغراض الدراسات اللغوية للقرآن الكريم إظهار الإعجاز اللغوي فيه وتوضيح جوانب بلاغته وفصاحته."
+            },
+            {
+                question: "كيف تساهم الدراسات اللغوية في الحفاظ على اللغة العربية؟",
+                options: [
+                    "بتحديد المعايير الصحيحة للغة وتصحيح الأخطاء الشائعة",
+                    "بتغيير قواعد اللغة لتتناسب مع العصر الحديث",
+                    "بإلغاء القواعد النحوية الصعبة",
+                    "بتبسيط اللغة إلى حد كبير"
+                ],
+                answer: "بتحديد المعايير الصحيحة للغة وتصحيح الأخطاء الشائعة",
+                explanation: "تساعد الدراسات اللغوية في الحفاظ على قواعد اللغة العربية وأصولها، مما يضمن استمرار فصاحتها وبلاغتها عبر الأجيال."
+            },
+            {
+                question: "ما إحدى المدارس اللغوية التي ظهرت في العصر الحديث؟",
+                options: [
+                    "المدرسة البنيوية",
+                    "المدرسة التقليدية",
+                    "المدرسة الجاهلية",
+                    "المدرسة الأموية"
+                ],
+                answer: "المدرسة البنيوية",
+                explanation: "في العصر الحديث، تطورت الدراسات اللغوية بشكل كبير وظهرت مدارس لغوية مختلفة مثل المدرسة البنيوية والمدرسة التوليدية التحويلية."
+            },
+            {
+                question: "كيف تساعد الدراسات اللغوية في فهم القرآن الكريم؟",
+                options: [
+                    "بتفسير المعاني الدقيقة للآيات القرآنية",
+                    "بتغيير معاني الآيات لتتناسب مع العصر",
+                    "بإثبات عدم دقة اللغة العربية في القرآن",
+                    "بتقليل أهمية الإعجاز اللغوي"
+                ],
+                answer: "بتفسير المعاني الدقيقة للآيات القرآنية",
+                explanation: "تعتبر الدراسات اللغوية أساسية لفهم النصوص الدينية بشكل صحيح. فهي تساعد في تفسير المعاني الدقيقة للآيات القرآنية."
+            },
+            {
+                question: "ما أحد أدوار الدراسات اللغوية في علم اللغة العربية؟",
+                options: [
+                    "دراسة تطور اللغة العربية عبر العصور",
+                    "إلغاء التراث اللغوي القديم",
+                    "تثبيت اللغة وعدم تطورها",
+                    "تقليل أهمية النحو العربي"
+                ],
+                answer: "دراسة تطور اللغة العربية عبر العصور",
+                explanation: "تمكن الدراسات اللغوية من تتبع التغيرات التي طرأت على اللغة العربية عبر الزمن، مما يساعد في فهم أفضل لتاريخ اللغة وتطورها."
+            },
+            {
+                question: "كيف تساهم الدراسات اللغوية في حل المشكلات المعاصرة؟",
+                options: [
+                    "بترجمة المصطلحات العلمية والتقنية الحديثة إلى العربية",
+                    "بتعطيل عملية التطور اللغوي",
+                    "برفض أي مصطلحات جديدة",
+                    "بالحفاظ على اللغة كما هي دون تغيير"
+                ],
+                answer: "بترجمة المصطلحات العلمية والتقنية الحديثة إلى العربية",
+                explanation: "تساعد الدراسات اللغوية في التعامل مع التحديات اللغوية الحديثة، مثل ترجمة المصطلحات العلمية والتقنية الحديثة إلى العربية."
+            },
+            {
+                question: "ما أحد أغراض الدراسات اللغوية من القرآن الكريم؟",
+                options: [
+                    "استنباط القواعد اللغوية والنحوية من النص القرآني",
+                    "إثبات عدم كفاية اللغة العربية",
+                    "تقليل بلاغة القرآن",
+                    "إثبات صعوبة اللغة العربية"
+                ],
+                answer: "استنباط القواعد اللغوية والنحوية من النص القرآني",
+                explanation: "من أغراض الدراسات اللغوية من القرآن الكريم استنباط القواعد اللغوية والنحوية من النص القرآني باعتباره أعلى نموذج للفصاحة العربية."
+            }
+        ];
 
-<div class="container" id="certificate" style="display:none;">
-  <h2>شهادة اجتياز الاختبار</h2>
-  <p>تهانينا، لقد اجتزت الاختبار!</p>
-  <p><strong>الاسم:</strong> <span id="studentDisplay"></span></p>
-  <p><strong>الدرجة:</strong> <span id="grade"></span></p>
-  <button onclick="window.print()">طباعة الشهادة</button>
-</div>
+        // Quiz Variables
+        let currentQuestion = 0;
+        let score = 0;
+        let selectedOption = null;
+        let studentName = "";
+        let userAnswers = Array(quizData.length).fill(null);
 
-<script>
-const quizData = [
-  {
-    question: "ما هو أول حاسوب إلكتروني تم تطويره؟",
-    options: ["ENIAC", "UNIVAC", "IBM PC", "FORTRAN"],
-    answer: "ENIAC",
-    explanation: "تم تطوير الحاسوب الإلكتروني ENIAC عام 1946 وهو أول حاسوب رقمي عام."
-  },
-  {
-    question: "ما هو معنى WWW؟",
-    options: ["World Wide Web", "Web World Wide", "Wide World Web", "World Web Wide"],
-    answer: "World Wide Web",
-    explanation: "WWW تعني World Wide Web وهي شبكة المعلومات العالمية التي طورها تيم بيرنرز لي عام 1991."
-  },
-  {
-    question: "من الذي طوّر أول معالج دقيق Intel 4004؟",
-    options: ["Intel", "Apple", "Microsoft", "IBM"],
-    answer: "Intel",
-    explanation: "في عام 1971، طوّرت شركة Intel أول معالج دقيق وهو Intel 4004."
-  },
-  {
-    question: "ما هو نظام التشغيل المعروف لشركة IBM في ستينيات القرن العشرين؟",
-    options: ["OS/360", "Windows", "UNIX", "DOS"],
-    answer: "OS/360",
-    explanation: "أطلقت IBM في عام 1964 نظام التشغيل OS/360 وهو من الأنظمة المهمة في تاريخ الحواسيب."
-  },
-  {
-    question: "ما هو مفهوم \"الحوسبة السحابية\"؟",
-    options: ["تخزين البيانات على الإنترنت", "استخدام أجهزة كمبيوتر محلية فقط", "إرسال البريد الإلكتروني فقط", "تشغيل الألعاب عبر الإنترنت"],
-    answer: "تخزين البيانات على الإنترنت",
-    explanation: "الحوسبة السحابية هي تخزين البيانات والتطبيقات على خوادم بعيدة متصلة بالإنترنت."
-  },
-  {
-    question: "متى ظهر أول هاتف ذكي iPhone؟",
-    options: ["2007", "2000", "2010", "1995"],
-    answer: "2007",
-    explanation: "أُصدر أول هاتف iPhone من شركة Apple في عام 2007، مما غير مفهوم الهواتف الذكية."
-  },
-  {
-    question: "ما هو دور HTML في الويب؟",
-    options: ["تصميم صفحات الويب", "برمجة التطبيقات", "إدارة قواعد البيانات", "تصحيح الأخطاء"],
-    answer: "تصميم صفحات الويب",
-    explanation: "HTML هو لغة ترميز تُستخدم لتصميم وتنظيم محتوى صفحات الويب."
-  },
-  {
-    question: "ما هو معنى IoT؟",
-    options: ["إنترنت الأشياء", "إنترنت الأجهزة", "شبكة الحواسيب", "الاتصال اللاسلكي"],
-    answer: "إنترنت الأشياء",
-    explanation: "IoT تعني إنترنت الأشياء، أي الربط بين الأجهزة المختلفة بشبكة الإنترنت."
-  },
-  {
-    question: "ما هو نظام التشغيل المستخدم في أجهزة أندرويد؟",
-    options: ["Android", "iOS", "Linux", "Windows"],
-    answer: "Android",
-    explanation: "نظام Android هو نظام تشغيل مبني على نواة Linux ويستخدم في معظم أجهزة الهواتف الذكية."
-  },
-  {
-    question: "ما هو أحد أهم تأثيرات التقنية على الإعلام الرقمي؟",
-    options: ["تسريع الوصول للمعلومات", "زيادة استخدام الصحف الورقية", "إبطاء نقل الأخبار", "عدم التواصل الاجتماعي"],
-    answer: "تسريع الوصول للمعلومات",
-    explanation: "التطور التكنولوجي ساهم بشكل كبير في تسريع الوصول إلى المعلومات والإخبار في الوقت الفعلي."
-  }
-];
+        // DOM Elements
+        const questionElement = document.getElementById('question');
+        const optionsElement = document.getElementById('options');
+        const explanationElement = document.getElementById('explanation');
+        const progressBar = document.getElementById('progress-bar');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
 
-let currentQuestion = 0;
-let score = 0;
-let answered = [];
-let studentName = "";
+        // Play click sound function
+        function playClickSound() {
+            const audio = new Audio('https://freesound.org/data/previews/171/171671_2437358-lq.mp3');
+            audio.play().catch(() => {});
+        }
 
-function startQuiz() {
-  const input = document.getElementById("studentName");
-  if (!input.value.trim()) {
-    alert("الرجاء إدخال اسمك قبل بدء الاختبار.");
-    return;
-  }
-  studentName = input.value.trim();
-  document.getElementById("startPage").style.display = "none";
-  document.getElementById("quizPage").style.display = "block";
-  loadQuestion();
-}
+        // Start Quiz
+        function startQuiz() {
+            studentName = document.getElementById('student-name').value.trim();
+            if (!studentName) {
+                alert("الرجاء إدخال اسمك قبل البدء");
+                return;
+            }
+            
+            document.querySelector('.start-page').classList.remove('active');
+            document.querySelector('.quiz-page').classList.add('active');
+            loadQuestion();
+        }
 
-function loadQuestion() {
-  const q = quizData[currentQuestion];
-  document.getElementById("question").textContent = q.question;
-  const optionsContainer = document.getElementById("options");
-  optionsContainer.innerHTML = "";
-  q.options.forEach(opt => {
-    const btn = document.createElement("button");
-    btn.textContent = opt;
-    btn.className = "option-btn";
-    btn.onclick = () => checkAnswer(btn, opt, q.answer, q.explanation);
-    if (answered[currentQuestion]) {
-      btn.disabled = true;
-      if (opt === q.answer) {
-        btn.classList.add("correct");
-      } else if (btn.textContent === Array.from(optionsContainer.children).find(b => b.style.backgroundColor === "red")?.textContent) {
-        btn.classList.add("wrong");
-      }
-    }
-    optionsContainer.appendChild(btn);
-  });
-  document.getElementById("score").textContent = `الدرجة: ${score} / ${quizData.length}`;
-}
+        // Load Question
+        function loadQuestion() {
+            const quiz = quizData[currentQuestion];
+            questionElement.textContent = `${currentQuestion + 1}. ${quiz.question}`;
+            
+            optionsElement.innerHTML = '';
+            quiz.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.classList.add('option');
+                if (userAnswers[currentQuestion] === index) {
+                    optionElement.classList.add('selected');
+                }
+                optionElement.textContent = option;
+                optionElement.addEventListener('click', () => selectOption(index));
+                optionsElement.appendChild(optionElement);
+            });
+            
+            // Show/hide explanation if answer was previously checked
+            if (userAnswers[currentQuestion] !== null) {
+                const selectedOptionIndex = userAnswers[currentQuestion];
+                const isCorrect = quiz.options[selectedOptionIndex] === quiz.answer;
+                
+                optionsElement.children[selectedOptionIndex].classList.add(isCorrect ? 'correct' : 'incorrect');
+                
+                // Highlight correct answer if wrong was selected
+                if (!isCorrect) {
+                    const correctIndex = quiz.options.indexOf(quiz.answer);
+                    optionsElement.children[correctIndex].classList.add('correct');
+                }
+                
+                explanationElement.textContent = quiz.explanation;
+                explanationElement.style.display = 'block';
+            } else {
+                explanationElement.style.display = 'none';
+            }
+            
+            // Update progress bar
+            progressBar.style.width = `${((currentQuestion + 1) / quizData.length) * 100}%`;
+            
+            // Update navigation buttons
+            prevBtn.disabled = currentQuestion === 0;
+            nextBtn.textContent = currentQuestion === quizData.length - 1 ? 'إنهاء الاختبار' : 'التالي';
+        }
 
-function checkAnswer(button, selected, correct, explanation) {
-  const options = document.getElementById("options").children;
-  if (answered[currentQuestion]) return;
+        // Select Option
+        function selectOption(index) {
+            playClickSound();
+            
+            // Remove selected class from all options
+            const options = optionsElement.querySelectorAll('.option');
+            options.forEach(option => option.classList.remove('selected'));
+            
+            // Add selected class to clicked option
+            options[index].classList.add('selected');
+            selectedOption = index;
+            userAnswers[currentQuestion] = index;
+            
+            // Check answer immediately
+            checkAnswer();
+        }
 
-  let isCorrect = false;
-  for (let i = 0; i < options.length; i++) {
-    options[i].disabled = true;
-    if (options[i].textContent === correct) {
-      options[i].classList.add("correct");
-    }
-    if (options[i].textContent === selected) {
-      if (selected === correct) {
-        score++;
-        isCorrect = true;
-        button.classList.add("correct");
-      } else {
-        button.classList.add("wrong");
-      }
-    }
-  }
+        // Check Answer
+        function checkAnswer() {
+            if (selectedOption === null) return;
+            
+            const quiz = quizData[currentQuestion];
+            const isCorrect = quiz.options[selectedOption] === quiz.answer;
+            
+            // Highlight selected option
+            const options = optionsElement.querySelectorAll('.option');
+            options[selectedOption].classList.add(isCorrect ? 'correct' : 'incorrect');
+            
+            // Highlight correct answer if wrong was selected
+            if (!isCorrect) {
+                const correctIndex = quiz.options.indexOf(quiz.answer);
+                options[correctIndex].classList.add('correct');
+            }
+            
+            // Show explanation
+            explanationElement.textContent = quiz.explanation;
+            explanationElement.style.display = 'block';
+            
+            // Update score if not already checked
+            if (userAnswers[currentQuestion] !== null && userAnswers[currentQuestion] === selectedOption) {
+                if (isCorrect) {
+                    score++;
+                }
+            }
+        }
 
-  document.getElementById("feedback").innerHTML = `<strong>${isCorrect ? "صحيح!" : "خطأ!"}</strong><br>${explanation}`;
-  answered[currentQuestion] = true;
-  document.getElementById("score").textContent = `الدرجة: ${score} / ${quizData.length}`;
+        // Next Question
+        function nextQuestion() {
+            if (currentQuestion < quizData.length - 1) {
+                currentQuestion++;
+                selectedOption = null;
+                loadQuestion();
+            } else {
+                showCertificate();
+            }
+        }
 
-  if (currentQuestion === quizData.length - 1) {
-    setTimeout(showScore, 1000);
-  }
-}
+        // Previous Question
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                selectedOption = userAnswers[currentQuestion];
+                loadQuestion();
+            }
+        }
 
-function nextQuestion() {
-  if (currentQuestion < quizData.length - 1) {
-    currentQuestion++;
-    document.getElementById("feedback").textContent = "";
-    loadQuestion();
-  }
-}
+        // Show Certificate
+        function showCertificate() {
+            document.querySelector('.quiz-page').classList.remove('active');
+            document.querySelector('.certificate-page').classList.add('active');
+            
+            const percentage = Math.round((score / quizData.length) * 100);
+            let grade = "";
+            
+            if (percentage >= 90) {
+                grade = "ممتاز";
+            } else if (percentage >= 70) {
+                grade = "جيد جدا";
+            } else if (percentage >= 50) {
+                grade = "مقبول";
+            } else {
+                grade = "يحتاج مراجعة";
+            }
+            
+            document.getElementById('certificate-name').textContent = studentName;
+            document.getElementById('score').textContent = `النتيجة: ${score} من ${quizData.length}`;
+            document.getElementById('grade').textContent = `التقدير: ${grade}`;
+        }
 
-function prevQuestion() {
-  if (currentQuestion > 0) {
-    currentQuestion--;
-    document.getElementById("feedback").textContent = "";
-    loadQuestion();
-  }
-}
+        // Send WhatsApp Message
+        function sendWhatsApp() {
+            const percentage = Math.round((score / quizData.length) * 100);
+            let grade = "";
+            
+            if (percentage >= 90) {
+                grade = "ممتاز";
+            } else if (percentage >= 70) {
+                grade = "جيد جدا";
+            } else if (percentage >= 50) {
+                grade = "مقبول";
+            } else {
+                grade = "يحتاج مراجعة";
+            }
+            
+            const currentDate = new Date().toLocaleDateString('ar-EG');
+            const message = `اسم الطالب: ${studentName}
+الكورس: الدراسات اللغوية للقرآن
+الموضوع: مقدمة
+النتيجة: ${score}/${quizData.length}
+التقدير: ${grade}
+التاريخ: ${currentDate}`;
+            
+            const encodedMessage = encodeURIComponent(message);
+            window.open(`https://wa.me/6001140269466?text=${encodedMessage}`, '_blank');
+        }
 
-function getGrade(score) {
-  if (score >= 9) return "ممتاز";
-  if (score >= 7) return "جيد جدًا";
-  if (score >= 5) return "جيد";
-  return "تحتاج للمراجعة";
-}
-
-function showScore() {
-  document.getElementById("quizPage").style.display = "none";
-  document.getElementById("certificate").style.display = "block";
-  document.getElementById("studentDisplay").textContent = studentName;
-  document.getElementById("grade").textContent = getGrade(score);
-}
-</script>
-
+        // Restart Quiz
+        function restartQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            selectedOption = null;
+            userAnswers = Array(quizData.length).fill(null);
+            
+            document.querySelector('.certificate-page').classList.remove('active');
+            document.querySelector('.start-page').classList.add('active');
+            document.getElementById('student-name').value = studentName;
+        }
+    </script>
 </body>
 </html>
